@@ -1,0 +1,56 @@
+{
+  "name": "Harsha Gypsum - List Profil & Plafon Mewah",
+  "short_name": "Harsha Gypsum",
+  "description": "Aplikasi katalog dan kalkulator list profil gypsum, wall moulding, dan ornamen plafon resmi Harsha Gypsum.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0B1120",
+  "theme_color": "#0B1120",
+  "orientation": "portrait-primary",
+  "lang": "id-ID",
+  "categories": ["shopping", "business", "lifestyle"],
+  "icons": [
+    {
+      "src": "assets/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/images/icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Katalog Motif",
+      "short_name": "Katalog",
+      "description": "Lihat 100+ pilihan motif list gypsum",
+      "url": "./index.html#katalog",
+      "icons": [{ "src": "assets/images/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Kalkulator Kebutuhan",
+      "short_name": "Kalkulator",
+      "description": "Hitung jumlah batang list untuk ruangan Anda",
+      "url": "./index.html#kalkulator",
+      "icons": [{ "src": "assets/images/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Chat WhatsApp Sales",
+      "short_name": "WhatsApp",
+      "description": "Hubungi staf sales Harsha Gypsum",
+      "url": "https://wa.me/6287775600462?text=Halo%20Harsha%20Gypsum",
+      "icons": [{ "src": "assets/images/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

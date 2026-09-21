@@ -1521,8 +1521,152 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ==========================================================================
-   CTA Banner
+   PWA Install Banner & Modal
    ========================================================================== */
+.pwa-install-banner {
+  position: fixed;
+  bottom: 74px;
+  left: 16px;
+  right: 16px;
+  background: rgba(17, 30, 54, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--primary-border);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  z-index: 1800;
+  box-shadow: var(--shadow-lg);
+  animation: pwaSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 992px) {
+  .pwa-install-banner {
+    left: auto;
+    right: 30px;
+    bottom: 30px;
+    max-width: 420px;
+  }
+}
+
+@keyframes pwaSlideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pwa-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pwa-banner-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #FFF;
+  padding: 2px;
+}
+
+.pwa-banner-text h5 {
+  font-size: 0.92rem;
+  color: #FFF;
+  margin-bottom: 2px;
+}
+
+.pwa-banner-text p {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.pwa-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn-pwa-install {
+  background: var(--gold-gradient);
+  color: #0F172A;
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+.btn-pwa-dismiss {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  padding: 4px;
+}
+
+.btn-pwa-dismiss:hover {
+  color: #FFF;
+}
+
+/* iOS PWA Instructions Modal */
+.ios-pwa-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 3500;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+}
+
+.ios-pwa-modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ios-pwa-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--primary-border);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.ios-pwa-box h4 {
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+  color: #FFF;
+}
+
+.ios-step-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  margin-top: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  color: #E2E8F0;
+}
+
+.ios-step-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
 .cta-box {
   background: linear-gradient(135deg, #1A294A 0%, #0E182D 100%);
   border: 1px solid var(--primary-border);

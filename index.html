@@ -7,7 +7,20 @@
   <meta name="description" content="Pabrik dan distributor resmi Harsha Gypsum: sedia list profil gypsum minimalis, klasik mewah, shadowline tali air, wall moulding, dan ornamen plafon presisi. Siap kirim se-Jabodetabek dan seluruh Indonesia.">
   <meta name="keywords" content="harsha gypsum, jual list gypsum, list profil gypsum, list plafon, list gypsum minimalis, list gypsum klasik, wall moulding gypsum, tali air gypsum, drop ceiling, ornamen gypsum, harga list gypsum per batang">
   <meta name="author" content="Harsha Gypsum">
+
+  <!-- PWA: Manifest & Icons -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/images/icon-192.png">
   <link rel="icon" type="image/png" href="assets/images/logo.png">
+  <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
+
+  <!-- PWA: Theme & Mobile App Meta -->
+  <meta name="theme-color" content="#0B1120">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Harsha Gypsum">
+  <meta name="application-name" content="Harsha Gypsum">
   
   <!-- OpenGraph Meta -->
   <meta property="og:title" content="Harsha Gypsum - Pusat List Profil & Ornamen Plafon Premium">
@@ -778,5 +791,112 @@
   <!-- Application Scripts -->
   <script src="js/products.js"></script>
   <script src="js/app.js"></script>
+
+  <!-- PWA Install Banner (Android/Desktop) -->
+  <div class="pwa-install-banner" id="pwaInstallBanner">
+    <div class="pwa-banner-left">
+      <img src="assets/images/icon-192.png" alt="Harsha Gypsum App" class="pwa-banner-icon">
+      <div class="pwa-banner-text">
+        <h5>Install Aplikasi Harsha Gypsum</h5>
+        <p>Akses katalog & kalkulator offline di HP Anda!</p>
+      </div>
+    </div>
+    <div class="pwa-banner-actions">
+      <button class="btn-pwa-install" id="btnPwaInstall">Install</button>
+      <button class="btn-pwa-dismiss" id="btnPwaDismiss" aria-label="Tutup">✕</button>
+    </div>
+  </div>
+
+  <!-- iOS PWA Install Instructions Modal -->
+  <div class="ios-pwa-modal" id="iosPwaModal">
+    <div class="ios-pwa-box">
+      <button style="position: absolute; top: 14px; right: 14px; color: var(--text-muted); font-size: 1.2rem;" id="iosModalClose">✕</button>
+      <img src="assets/images/icon-192.png" alt="Harsha Gypsum" style="width: 64px; height: 64px; border-radius: 14px; margin: 0 auto 16px; display: block; background:#fff; padding: 4px;">
+      <h4>Tambahkan ke Layar Utama</h4>
+      <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 4px;">Akses Harsha Gypsum seperti aplikasi nyata di iPhone / iPad Anda</p>
+
+      <div class="ios-step-item">
+        <span class="ios-step-icon">1️⃣</span>
+        <span>Ketuk tombol <strong>Bagikan</strong> <span style="font-size:1.1rem">⎙</span> di bawah browser Safari</span>
+      </div>
+      <div class="ios-step-item">
+        <span class="ios-step-icon">2️⃣</span>
+        <span>Gulir ke bawah dan pilih <strong>"Tambahkan ke Layar Utama"</strong></span>
+      </div>
+      <div class="ios-step-item">
+        <span class="ios-step-icon">3️⃣</span>
+        <span>Ketuk <strong>"Tambahkan"</strong> di pojok kanan atas — selesai! 🎉</span>
+      </div>
+
+      <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" id="iosModalGotIt">Mengerti, Tutup</button>
+    </div>
+  </div>
+
+  <!-- PWA Service Worker & Install Logic -->
+  <script>
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('Harsha Gypsum SW registered:', reg.scope))
+          .catch(err => console.log('SW registration failed:', err));
+      });
+    }
+
+    // PWA Install Prompt (Android / Desktop Chrome)
+    let deferredPrompt;
+    const installBanner = document.getElementById('pwaInstallBanner');
+    const btnInstall = document.getElementById('btnPwaInstall');
+    const btnDismiss = document.getElementById('btnPwaDismiss');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      // Show banner after a short delay
+      setTimeout(() => {
+        installBanner.style.display = 'flex';
+      }, 3000);
+    });
+
+    if (btnInstall) {
+      btnInstall.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        installBanner.style.display = 'none';
+      });
+    }
+
+    if (btnDismiss) {
+      btnDismiss.addEventListener('click', () => {
+        installBanner.style.display = 'none';
+      });
+    }
+
+    window.addEventListener('appinstalled', () => {
+      installBanner.style.display = 'none';
+      if (window.showToast) window.showToast('Harsha Gypsum berhasil diinstall di HP Anda! 🎉');
+    });
+
+    // iOS Safari Detection — show instructions modal
+    const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    const iosDismissed = sessionStorage.getItem('ios_pwa_dismissed');
+
+    if (isIos && !isInStandaloneMode && !iosDismissed) {
+      const iosModal = document.getElementById('iosPwaModal');
+      setTimeout(() => { if (iosModal) iosModal.classList.add('active'); }, 4000);
+
+      document.getElementById('iosModalClose').addEventListener('click', () => {
+        iosModal.classList.remove('active');
+        sessionStorage.setItem('ios_pwa_dismissed', '1');
+      });
+      document.getElementById('iosModalGotIt').addEventListener('click', () => {
+        iosModal.classList.remove('active');
+        sessionStorage.setItem('ios_pwa_dismissed', '1');
+      });
+    }
+  </script>
 </body>
 </html>
