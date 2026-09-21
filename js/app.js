@@ -5,6 +5,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   // State
+  let productsData = (typeof GYPSUM_PRODUCTS !== 'undefined') ? [...GYPSUM_PRODUCTS] : [];
   let currentCategory = 'all';
   let searchQuery = '';
   let sortBy = 'popular';
@@ -69,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function getFilteredProducts() {
-    return GYPSUM_PRODUCTS.filter(item => {
+    return productsData.filter(item => {
       const matchCategory = currentCategory === 'all' || item.category === currentCategory;
       const matchSearch = searchQuery === '' || 
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -145,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function initProducts() {
     renderProducts();
+    loadProductsFromApi();
 
     // Category Buttons
     filterBtns.forEach(btn => {
@@ -173,11 +175,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Fetch dynamic products from PHP API with fallback to static
+  async function loadProductsFromApi() {
+    try {
+      const res = await fetch('api/products.php');
+      if (res.ok) {
+        const json = await res.json();
+        if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
+          productsData = json.data;
+          renderProducts();
+          initCalculatorOptions();
+          console.log(`[Harsha Gypsum] ${json.data.length} produk berhasil dimuat dari database server.`);
+        }
+      }
+    } catch (e) {
+      console.log('[Harsha Gypsum] Mode offline/statis: menggunakan katalog lokal.', e);
+    }
+  }
+
   // =========================================================================
   // Product Detail Modal
   // =========================================================================
   window.showProductDetail = function(productId) {
-    const product = GYPSUM_PRODUCTS.find(p => p.id === productId);
+    const product = productsData.find(p => String(p.id) === String(productId));
     if (!product) return;
 
     activeModalProduct = product;
@@ -253,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Quick Order button on Card
   window.quickOrderWA = function(productId) {
-    const product = GYPSUM_PRODUCTS.find(p => p.id === productId);
+    const product = productsData.find(p => String(p.id) === String(productId));
     if (!product) return;
 
     const message = `Halo ${WHATSAPP_CONFIG.storeName}, saya tertarik untuk order list gypsum:\n\n` +
@@ -409,7 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Smart Room Gypsum Calculator
   // =========================================================================
   function initCalculatorOptions() {
-    const listOptions = GYPSUM_PRODUCTS.filter(p => p.category === 'minimalis' || p.category === 'klasik' || p.category === 'shadowline');
+    const listOptions = productsData.filter(p => p.category === 'minimalis' || p.category === 'klasik' || p.category === 'shadowline');
     calcProductSelect.innerHTML = listOptions.map(p => {
       return `<option value="${p.id}" data-price="${p.price}" data-length="${p.lengthMeter}">${p.name} (${p.code}) - ${formatRupiah(p.price)}/btg</option>`;
     }).join('');
